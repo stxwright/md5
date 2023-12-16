@@ -1,5 +1,4 @@
 ﻿using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
 
 namespace MD5.Benchmark
@@ -19,9 +18,8 @@ namespace MD5.Benchmark
             new Random(42).NextBytes(data);
         }
 
-/*        [Benchmark]
-        public byte[] Md5() => md5.ComputeHash(data);*/
-
+        [Benchmark]
+        public byte[] Md5() => md5.ComputeHash(data);
 
         [Benchmark]
         public byte[] StxMd5() => stxMd5.ComputeHash(data);
