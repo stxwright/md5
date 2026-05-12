@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>MD5.Benchmark.Md5VsSha256-20260512-165237</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.13.10, Windows 11 (10.0.26200.8246)
+Unknown processor
+.NET SDK 10.0.203
+  [Host]     : .NET 10.0.7 (10.0.726.21808), X64 RyuJIT AVX2
+  DefaultJob : .NET 10.0.7 (10.0.726.21808), X64 RyuJIT AVX2
+</code></pre>
+<pre><code></code></pre>
+
+<table>
+<thead><tr><th>Method</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>Md5</td><td>14.77 &mu;s</td><td>0.170 &mu;s</td><td>0.159 &mu;s</td><td>80 B</td>
+</tr><tr><td>StxMd5</td><td>22.27 &mu;s</td><td>0.204 &mu;s</td><td>0.191 &mu;s</td><td>40 B</td>
+</tr></tbody></table>
+</body>
+</html>
