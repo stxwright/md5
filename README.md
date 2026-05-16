@@ -2,7 +2,7 @@
 
 ![CI](https://github.com/stxwright/md5/actions/workflows/ci.yml/badge.svg?branch=master)
 
-A high-performance MD5 implementation in C#.
+A pure C# MD5 implementation optimised for small inputs. Outperforms the BCL implementation for inputs under ~512 bytes, with half the allocations at all sizes.
 
 ## Usage
 
