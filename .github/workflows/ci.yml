@@ -34,8 +34,8 @@ jobs:
       uses: docker/setup-qemu-action@v3
     - name: Run tests in s390x (Big Endian)
       run: |
-        docker run --rm --platform linux/s390x -v $(pwd):/app -w /app mcr.microsoft.com/dotnet/sdk:8.0 \
-          dotnet test
+        docker run --rm --platform linux/s390x -v $(pwd):/app -w /app fedora:39 \
+          /bin/bash -c "dnf install -y dotnet-sdk-8.0 && dotnet test -f net8.0"
 
   benchmark:
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
