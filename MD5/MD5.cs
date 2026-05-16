@@ -1,6 +1,7 @@
 using System;
 using System.Buffers;
 using System.Buffers.Binary;
+using System.Runtime.InteropServices;
 
 namespace StxWright
 {
@@ -39,8 +40,15 @@ namespace StxWright
                     uint A = a0, B = b0, C = c0, D = d0;
                     uint v;
 
-                    for (int j = 0; j < 16; j++)
-                        M[j] = BinaryPrimitives.ReadUInt32LittleEndian(chunk.Slice(j * 4, 4));
+                    if (BitConverter.IsLittleEndian)
+                    {
+                        MemoryMarshal.Cast<byte, uint>(chunk).CopyTo(M);
+                    }
+                    else
+                    {
+                        for (int j = 0; j < 16; j++)
+                            M[j] = BinaryPrimitives.ReadUInt32LittleEndian(chunk.Slice(j * 4, 4));
+                    }
 
                     // Rounds logic
                     // Round 1
