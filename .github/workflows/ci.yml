@@ -47,9 +47,13 @@ jobs:
           # Logic to update README.md
           python3 scripts/update_readme_benchmarks.py "$BENCH_FILE"
         fi
-    - name: Commit changes
+    - name: Commit and push changes
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add README.md
-        git commit -m "Update benchmark results in README [skip ci]" || echo "No changes to commit"
+        if git commit -m "Update benchmark results in README [skip ci]"; then
+          git push origin HEAD:${{ github.head_ref || github.ref_name }}
+        else
+          echo "No changes to commit"
+        fi
