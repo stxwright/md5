@@ -27,7 +27,6 @@ jobs:
       run: dotnet test --no-build --verbosity normal
 
   benchmark:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -48,10 +47,9 @@ jobs:
           # Logic to update README.md
           python3 scripts/update_readme_benchmarks.py "$BENCH_FILE"
         fi
-    - name: Commit and Push changes
+    - name: Commit changes
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add README.md
         git commit -m "Update benchmark results in README [skip ci]" || echo "No changes to commit"
-        git push
