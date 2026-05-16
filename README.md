@@ -1,6 +1,6 @@
 # StxWright.MD5
 
-![CI](https://github.com/StxWright/MD5/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/stxwright/md5/actions/workflows/ci.yml/badge.svg?branch=master)
 
 A high-performance MD5 implementation in C#.
 
