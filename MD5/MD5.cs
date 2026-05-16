@@ -20,9 +20,9 @@ namespace StxWright
             {
                 inputBytes.AsSpan().CopyTo(buffer);
                 buffer[originalLength] = 0x80;
-                
+
                 // Clear the padding area
-                Array.Clear(buffer, originalLength + 1, totalLength - originalLength - 1);
+                Array.Clear(buffer, originalLength + 1, paddingLength - 1);
 
                 // Set length in bits (little-endian)
                 BinaryPrimitives.WriteInt64LittleEndian(buffer.AsSpan(totalLength - 8), (long)originalLength * 8);
@@ -39,8 +39,22 @@ namespace StxWright
                     uint A = a0, B = b0, C = c0, D = d0;
                     uint v;
 
-                    for (int j = 0; j < 16; j++)
-                        M[j] = BinaryPrimitives.ReadUInt32LittleEndian(chunk.Slice(j * 4, 4));
+                    M[0x0] = BinaryPrimitives.ReadUInt32LittleEndian(chunk.Slice(0 , 4));
+                    M[0x1] = BinaryPrimitives.ReadUInt32LittleEndian(chunk.Slice(4 , 4));
+                    M[0x2] = BinaryPrimitives.ReadUInt32LittleEndian(chunk.Slice(8 , 4));
+                    M[0x3] = BinaryPrimitives.ReadUInt32LittleEndian(chunk.Slice(12, 4));
+                    M[0x4] = BinaryPrimitives.ReadUInt32LittleEndian(chunk.Slice(16, 4));
+                    M[0x5] = BinaryPrimitives.ReadUInt32LittleEndian(chunk.Slice(20, 4));
+                    M[0x6] = BinaryPrimitives.ReadUInt32LittleEndian(chunk.Slice(24, 4));
+                    M[0x7] = BinaryPrimitives.ReadUInt32LittleEndian(chunk.Slice(28, 4));
+                    M[0x8] = BinaryPrimitives.ReadUInt32LittleEndian(chunk.Slice(32, 4));
+                    M[0x9] = BinaryPrimitives.ReadUInt32LittleEndian(chunk.Slice(36, 4));
+                    M[0xA] = BinaryPrimitives.ReadUInt32LittleEndian(chunk.Slice(40, 4));
+                    M[0xB] = BinaryPrimitives.ReadUInt32LittleEndian(chunk.Slice(44, 4));
+                    M[0xC] = BinaryPrimitives.ReadUInt32LittleEndian(chunk.Slice(48, 4));
+                    M[0xD] = BinaryPrimitives.ReadUInt32LittleEndian(chunk.Slice(52, 4));
+                    M[0xE] = BinaryPrimitives.ReadUInt32LittleEndian(chunk.Slice(56, 4));
+                    M[0xF] = BinaryPrimitives.ReadUInt32LittleEndian(chunk.Slice(60, 4));
 
                     // Rounds logic
                     // Round 1
@@ -117,7 +131,7 @@ namespace StxWright
 
                     a0 += A; b0 += B; c0 += C; d0 += D;
                 }
-                
+
                 byte[] result = new byte[16];
                 BinaryPrimitives.WriteUInt32LittleEndian(result.AsSpan(0, 4), a0);
                 BinaryPrimitives.WriteUInt32LittleEndian(result.AsSpan(4, 4), b0);

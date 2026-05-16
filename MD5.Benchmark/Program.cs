@@ -6,7 +6,7 @@ namespace MD5.Benchmark
     [MemoryDiagnoser]
     public class Md5Comparison
     {
-        [Params(64, 1024, 1048576)]
+        [Params(64, 128, 256, 512, 1024)]
         public int Size { get; set; }
 
         private byte[] data = null!;
