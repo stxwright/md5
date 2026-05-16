@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          8.0.x
+          10.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+
+  test-big-endian:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+    - name: Run tests in s390x (Big Endian)
+      run: |
+        docker run --rm --platform linux/s390x -v $(pwd):/app -w /app mcr.microsoft.com/dotnet/sdk:8.0 \
+          dotnet test
+
+  benchmark:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.0.x
+    - name: Run Benchmarks
+      run: dotnet run -c Release --project MD5.Benchmark -- --filter * --format github
+    - name: Update README with Benchmarks
+      run: |
+        # Extract the benchmark table from the generated markdown file
+        # The file is usually in MD5.Benchmark/BenchmarkDotNet.Artifacts/results/MD5.Benchmark.Md5VsSha256-report-github.md
+        BENCH_FILE=$(find MD5.Benchmark/BenchmarkDotNet.Artifacts/results/ -name "*-report-github.md" | head -n 1)
+        if [ -f "$BENCH_FILE" ]; then
+          # Logic to update README.md
+          python3 scripts/update_readme_benchmarks.py "$BENCH_FILE"
+        fi
+    - name: Commit and Push changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add README.md
+        git commit -m "Update benchmark results in README [skip ci]" || echo "No changes to commit"
+        git push
