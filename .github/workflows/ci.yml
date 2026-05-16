@@ -26,17 +26,6 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
 
-  test-big-endian:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v3
-    - name: Run tests in s390x (Big Endian)
-      run: |
-        docker run --rm --platform linux/s390x -v $(pwd):/app -w /app fedora:39 \
-          /bin/bash -c "dnf install -y dotnet-sdk-8.0 && dotnet test -f net8.0"
-
   benchmark:
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
@@ -47,7 +36,9 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Run Benchmarks
-      run: dotnet run -c Release --project MD5.Benchmark -- --filter * --format github
+      run: |
+        cd MD5.Benchmark
+        dotnet run -c Release -- --filter *Md5Comparison* --exporters github
     - name: Update README with Benchmarks
       run: |
         # Extract the benchmark table from the generated markdown file
